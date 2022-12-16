@@ -1,5 +1,17 @@
 <#
-# First enable Event logs for Microsoft-Windows-DriverFrameworks-UserMode/Operational, see
+.SYNOPSIS
+  Backup your .fit-files from your Garmin watch.
+.DESCRIPTION
+  For information on how to use this see Get-Help -Full on this file.
+.PARAMETER Help
+  Show this help!
+.PARAMETER BackupPath
+  Specifies the path to where we will put the backup from your Garmin Watch.
+.EXAMPLE
+  C:\PS>
+  <Description of example>
+.NOTES
+First enable Event logs for Microsoft-Windows-DriverFrameworks-UserMode/Operational, see
 https://www.powershellmagazine.com/2013/07/15/pstip-how-to-enable-event-logs-using-windows-powershell/
 
 In an Administrator Powershell:
@@ -59,12 +71,22 @@ Add a scheduled task from this XML:
 </Task>
 #>
 
+Param(
+  [Switch]$Help
+  ,[Parameter(Mandatory=$true)]
+    [ValidateNotNullOrEmpty()]
+    [String]$BackupPath
+)
+
+if ($Help) {
+  Get-Help -Full "$(Get-Location)\$($MyInvocation.MyCommand)"
+  Exit 255
+}
+
 # MTP code from https://github.com/nosalan/powershell-mtp-file-transfer/
 # for an enhanced version that supports nested folders go to https://github.com/nosalan/powershell-mtp-file-transfer/blob/master/phone_backup_recursive.ps1
 
 $ErrorActionPreference = "Stop"
-$DestDirForPhotos = "C:\backup"
-
 
 function Create-Dir($path)
 {
@@ -200,7 +222,7 @@ $phoneName = "Forerunner 645 Music" # MTP device name as it appears in This PC
 $phoneRootDir = Get-PhoneMainDir $phoneName
 
 $phoneCardPhotosSourceDir = Get-SubFolder $phoneRootDir "Primary\GARMIN\Activity"
-Copy-FromPhone-ToDestDir $phoneCardPhotosSourceDir $DestDirForPhotos
+Copy-FromPhone-ToDestDir $phoneCardPhotosSourceDir $BackupPath
 
 pscp -r -p -batch -noagent -i C:\forerunner-backup.ppk -sftp C:\backup\ root@backup.domain.tld:/backup/forerunner/
 
