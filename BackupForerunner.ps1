@@ -92,12 +92,12 @@ function Create-Dir($path)
 {
   if(! (Test-Path -Path $path))
   {
-    Write-Host "Creating: $path"
+    Write-Verbose "Creating: $path"
     New-Item -Path $path -ItemType Directory
   }
   else
   {
-    Write-Host "Path $path already exist"
+    Write-Verbose "Path $path already exist"
   }
 }
 
@@ -152,7 +152,7 @@ function Copy-FromPhone-ToDestDir($sourceMtpDir, $destDirPath)
  $destDirShell = (new-object -com Shell.Application).NameSpace($destDirPath)
  $fullSourceDirPath = Get-FullPathOfMtpDir $sourceMtpDir
 
- Write-Host "Copying from: '" $fullSourceDirPath "' to '" $destDirPath "'"
+ Write-Host("Copying from '{0}' to '{1}'" -f $fullSourceDirPath, $destDirPath)
 
  $copiedCount = 0;
 
@@ -162,12 +162,12 @@ function Copy-FromPhone-ToDestDir($sourceMtpDir, $destDirPath)
    $fullFilePath = Join-Path -Path $destDirPath -ChildPath $itemName
    if(Test-Path $fullFilePath)
    {
-      Write-Host "Element '$itemName' already exists"
+      Write-Verbose "Element '$itemName' already exists"
    }
    else
    {
      $copiedCount++;
-     Write-Host ("Copying #{0}: {1}{2}" -f $copiedCount, $fullSourceDirPath, $item.Name)
+     Write-Verbose ("Copying #{0}: {1}{2}" -f $copiedCount, $fullSourceDirPath, $item.Name)
      $destDirShell.CopyHere($item)
    }
   }
@@ -201,12 +201,12 @@ Function Req {
             $completed = $true
         } catch {
             if ($retrycount -ge $Retries) {
-                Write-Warning "Request to $url failed the maximum number of $retryCount times."
+                Write-Error "Request to $url failed the maximum number of $retryCount times."
                 throw
             } else {
                 Write-Warning "Request to $url failed. Retrying in $SecondsDelay seconds."
-                Write-Host "StatusCode:" $_.Exception.Response.StatusCode.value__
-                Write-Host "StatusDescription:" $_.Exception.Response.StatusDescription
+                Write-Verbose "StatusCode:" $_.Exception.Response.StatusCode.value__
+                Write-Verbose "StatusDescription:" $_.Exception.Response.StatusDescription
                 Start-Sleep $SecondsDelay
                 $retrycount++
             }
