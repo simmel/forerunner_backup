@@ -122,12 +122,12 @@ function Get-PhoneMainDir($phoneName)
   $o = New-Object -com Shell.Application
   $rootComputerDirectory = $o.NameSpace(0x11)
   $phoneDirectory = $rootComputerDirectory.Items() | Where-Object {$_.Name -eq $phoneName} | select -First 1
-    
+
   if($phoneDirectory -eq $null)
   {
     throw "Not found '$phoneName' folder in This computer. Connect your phone."
   }
-  
+
   return $phoneDirectory;
 }
 
@@ -151,16 +151,15 @@ function Copy-FromPhone-ToDestDir($sourceMtpDir, $destDirPath)
  Create-Dir $destDirPath
  $destDirShell = (new-object -com Shell.Application).NameSpace($destDirPath)
  $fullSourceDirPath = Get-FullPathOfMtpDir $sourceMtpDir
- 
+
  Write-Host "Copying from: '" $fullSourceDirPath "' to '" $destDirPath "'"
- 
+
  $copiedCount = 0;
- 
+
  foreach ($item in $sourceMtpDir.GetFolder.Items())
   {
    $itemName = ($item.Name)
    $fullFilePath = Join-Path -Path $destDirPath -ChildPath $itemName
-   
    if(Test-Path $fullFilePath)
    {
       Write-Host "Element '$itemName' already exists"
@@ -206,7 +205,7 @@ Function Req {
                 throw
             } else {
                 Write-Warning "Request to $url failed. Retrying in $SecondsDelay seconds."
-                Write-Host "StatusCode:" $_.Exception.Response.StatusCode.value__ 
+                Write-Host "StatusCode:" $_.Exception.Response.StatusCode.value__
                 Write-Host "StatusDescription:" $_.Exception.Response.StatusDescription
                 Start-Sleep $SecondsDelay
                 $retrycount++
