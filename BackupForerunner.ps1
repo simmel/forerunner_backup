@@ -7,6 +7,8 @@
   Show this help!
 .PARAMETER BackupPath
   Specifies the path to where we will put the backup from your Garmin Watch.
+.PARAMETER DeviceName
+  The MTP device name of your device e.g. "Forerunner 645 Music".
 .EXAMPLE
   C:\PS>
   <Description of example>
@@ -76,6 +78,9 @@ Param(
   ,[Parameter()]
     [ValidateNotNullOrEmpty()]
     [String]$BackupPath
+  ,[Parameter()]
+    [ValidateNotNullOrEmpty()]
+    [String]$DeviceName
 )
 
 if ($Help) {
@@ -83,7 +88,7 @@ if ($Help) {
   Exit 255
 }
 
-if (!$BackupPath) {
+if (!$BackupPath -or !$DeviceName) {
   Get-Help -Full "$(Get-Location)\$($MyInvocation.MyCommand)"
   Exit 255
 }
@@ -221,9 +226,7 @@ Function Req {
     return $response
 }
 
-
-$phoneName = "Forerunner 645 Music" # MTP device name as it appears in This PC
-$phoneRootDir = Get-PhoneMainDir $phoneName
+$phoneRootDir = Get-PhoneMainDir $DeviceName
 
 $phoneCardPhotosSourceDir = Get-SubFolder $phoneRootDir "Primary\GARMIN\Activity"
 Copy-FromPhone-ToDestDir $phoneCardPhotosSourceDir $BackupPath
