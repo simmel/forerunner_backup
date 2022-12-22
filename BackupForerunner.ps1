@@ -178,7 +178,7 @@ function Copy-FromPhone-ToDestDir($sourceMtpDir, $destDirPath)
    {
      $copiedCount++;
      Write-Verbose ("Copying #{0}: {1}{2}" -f $copiedCount, $fullSourceDirPath, $item.Name)
-     $destDirShell.CopyHere($item)
+     $destDirShell.CopyHere($item, 1024)
    }
   }
   Write-Host "Copied '$copiedCount' elements from '$fullSourceDirPath'"
