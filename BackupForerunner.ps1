@@ -73,12 +73,17 @@ Add a scheduled task from this XML:
 
 Param(
   [Switch]$Help
-  ,[Parameter(Mandatory=$true)]
+  ,[Parameter()]
     [ValidateNotNullOrEmpty()]
     [String]$BackupPath
 )
 
 if ($Help) {
+  Get-Help -Full "$(Get-Location)\$($MyInvocation.MyCommand)"
+  Exit 255
+}
+
+if (!$BackupPath) {
   Get-Help -Full "$(Get-Location)\$($MyInvocation.MyCommand)"
   Exit 255
 }
