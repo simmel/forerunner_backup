@@ -184,53 +184,7 @@ function Copy-FromPhone-ToDestDir($sourceMtpDir, $destDirPath)
   Write-Host "Copied '$copiedCount' elements from '$fullSourceDirPath'"
 }
 
-# From https://karask.com/retry-powershell-invoke-webrequest/ but modified to use Invoke-RestMethod instead (since Invoke-WebRequest uses IE and I don't have it installed).
-Function Req {
-    Param(
-        [Parameter(Mandatory=$True)]
-        [hashtable]$Params,
-        [int]$Retries = 3,
-        [int]$SecondsDelay = 2
-    )
-
-    $method = $Params['Method']
-    $url = $Params['Uri']
-
-    $cmd = { Write-Host "$method $url... " -NoNewline; Invoke-RestMethod @Params }
-
-    $retryCount = 0
-    $completed = $false
-    $response = $null
-
-    while (-not $completed) {
-        try {
-            Invoke-Command $cmd -ArgumentList $Params
-#            if ($response.StatusCode -ne 200) {
-#                throw "Expecting reponse code 200, was: $($StatusCode)"
-#            }
-            $completed = $true
-        } catch {
-            if ($retrycount -ge $Retries) {
-                Write-Error "Request to $url failed the maximum number of $retryCount times."
-                throw
-            } else {
-                Write-Warning "Request to $url failed. Retrying in $SecondsDelay seconds."
-                Write-Verbose "StatusCode:" $_.Exception.Response.StatusCode.value__
-                Write-Verbose "StatusDescription:" $_.Exception.Response.StatusDescription
-                Start-Sleep $SecondsDelay
-                $retrycount++
-            }
-        }
-    }
-
-    return $response
-}
-
 $phoneRootDir = Get-PhoneMainDir $DeviceName
 
 $phoneCardPhotosSourceDir = Get-SubFolder $phoneRootDir "Primary\GARMIN\Activity"
 Copy-FromPhone-ToDestDir $phoneCardPhotosSourceDir $BackupPath
-
-pscp -r -p -batch -noagent -i C:\forerunner-backup.ppk -sftp C:\backup\ root@backup.domain.tld:/backup/forerunner/
-
-Req -Params @{ 'Method'='GET';'TimeoutSec'='5';'Uri'='https://hc-ping.com/meowpew' }
