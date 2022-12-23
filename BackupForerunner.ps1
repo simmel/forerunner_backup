@@ -10,8 +10,8 @@
 .PARAMETER DeviceName
   The MTP device name of your device e.g. "Forerunner 645 Music".
 .EXAMPLE
-  C:\PS>
-  <Description of example>
+  C:\PS> .\BackupForerunner.ps1 -BackupPath C:\backup -DeviceName "Forerunner 645 Music"
+  Backup a Forerunner 645 Music to C:\backup
 .NOTES
 First enable Event logs for Microsoft-Windows-DriverFrameworks-UserMode/Operational, see
 https://www.powershellmagazine.com/2013/07/15/pstip-how-to-enable-event-logs-using-windows-powershell/
