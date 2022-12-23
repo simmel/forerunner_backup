@@ -67,7 +67,7 @@ Add a scheduled task from this XML:
   <Actions Context="Author">
     <Exec>
       <Command>powershell.exe</Command>
-      <Arguments>-ExecutionPolicy Bypass C:\BackupForerunner.ps1</Arguments>
+      <Arguments>-ExecutionPolicy Bypass -Command "C:\BackupForerunner.ps1 -BackupPath C:\backup -DeviceName 'Forerunner 645 Music' && pscp -r -p -batch -noagent -i C:\forerunner-backup.ppk -sftp C:\backup\ root@backup.domain.tld:/backup/forerunner/ && Invoke-RestMethod -TimeoutSec 5 -Uri https://hc-ping.com/meowpew"</Arguments>
     </Exec>
   </Actions>
 </Task>
