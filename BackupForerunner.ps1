@@ -168,8 +168,9 @@ function Copy-FromPhone-ToDestDir($sourceMtpDir, $destDirPath)
 
  foreach ($item in $sourceMtpDir.GetFolder.Items())
   {
-   $itemName = ($item.Name)
-   $fullFilePath = Join-Path -Path $destDirPath -ChildPath $itemName
+   $itemName = $item.Name
+   $fullFilePath = Join-Path -Path $destDirPath -ChildPath "$itemName.*" -Resolve
+   Write-Debug "Does '$fullFilePath' exist? $(Test-Path $fullFilePath)"
    if(Test-Path $fullFilePath)
    {
       Write-Verbose "Element '$itemName' already exists"
