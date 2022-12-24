@@ -27,3 +27,14 @@ REMARKS
     For more information, type: "get-help C:\BackupForerunner.ps1 -detailed".
     For technical information, type: "get-help C:\BackupForerunner.ps1 -full".
 ```
+
+## Usage
+
+`Get-Help -Full .\BackupForerunner.ps1` so see how to create a Scheduled task
+which is triggered when the Garmin watch is connected to your computer.
+
+If you're using Powershell >=7 you can also perform operations to e.g. copy the
+backup to a NAS and signal to a monitoring system that you've done the backup:
+```powershell
+pwsh.exe -ExecutionPolicy Bypass -Command "C:\BackupForerunner.ps1 -BackupPath C:\backup -DeviceName 'Forerunner 645 Music' && pscp -r -p -batch -noagent -i C:\forerunner-backup.ppk -sftp C:\backup\ root@backup.domain.tld:/backup/forerunner/ && Invoke-RestMethod -TimeoutSec 5 -Uri https://hc-ping.com/meowpew"
+```
